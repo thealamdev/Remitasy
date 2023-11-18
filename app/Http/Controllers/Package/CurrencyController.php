@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Package;
 
 use App\Http\Controllers\Controller;
+use App\Http\Handlers\Package\CurrencyHandler;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
 use App\Models\Currency;
@@ -25,13 +26,11 @@ class CurrencyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCurrencyRequest $request)
+    public function store(StoreCurrencyRequest $request, CurrencyHandler $handler)
     {
         $request->validated($request->all());
-        $currency = Currency::create(array_merge_recursive($request->only('name', 'code', 'symbol', 'rate')));
-        return $this->success([
-            'currency' => $currency,
-        ], 'Currency added auccessfull');
+        $isCreate = $handler->store($request);
+        return $isCreate;
     }
 
     /**
@@ -47,12 +46,10 @@ class CurrencyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCurrencyRequest $request, Currency $currency)
+    public function update(UpdateCurrencyRequest $request, Currency $currency, CurrencyHandler $handler)
     {
-        $currency->update(array_merge_recursive($request->only('name', 'code', 'symbol', 'rate')));
-        return $this->success([
-            'data' => 'updated',
-        ], 'Currency updated successfully');
+        $isCreate = $handler->update($request,$currency);
+        return $isCreate;
     }
 
     /**
