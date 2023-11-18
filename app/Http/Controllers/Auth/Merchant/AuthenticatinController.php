@@ -7,12 +7,13 @@ use App\Http\Requests\MerchantLoginRequest;
 use App\Http\Requests\MerchantRegisterRequest;
 use App\Models\Merchant;
 use App\Traits\HttpResponse;
+use App\Traits\Uploader;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthenticatinController extends Controller
 {
-    use HttpResponse;
+    use HttpResponse, Uploader;
     /**
      * Register into merchant account.
      */
@@ -22,6 +23,7 @@ class AuthenticatinController extends Controller
         $data['password'] = Hash::make($data['password']);
 
         $merchant = Merchant::create($data);
+        // $this->upload($request);
 
         return $this->success([
             'merchant' => $merchant,
@@ -35,7 +37,7 @@ class AuthenticatinController extends Controller
     public function login(MerchantLoginRequest $request)
     {
         $request->validated($request->all());
-        if (!Auth::attempt($request->only(['email', 'password']))) {
+        if (!Auth::guard('merchant')->attempt($request->only(['email', 'password']))) {
             return $this->error('', 'Credentials do not match admin', 401);
         }
 

@@ -23,16 +23,18 @@ class MerchantRegisterRequest extends FormRequest
     {
         return [
             'full_name' => ['required', 'string', 'max:50'],
-            'country_code' => ['required', 'string'],
-            'mobile' => ['required', 'string'],
+            'country_code' => ['required', 'integer'],
+            'mobile' => ['required', 'string', 'unique:merchants'],
             'email' => ['email', 'string', 'unique:merchants'],
             'password' => ['required', 'string'],
             'country' => ['required', 'string'],
             'city' => ['required', 'string'],
             'area' => ['required', 'string'],
             'address' => ['required', 'string'],
-            'currency' => ['required', 'string'],
+            'currency_id' => ['required'],
             'document_type' => ['required'],
+            // 'image' => ['image', 'mimes:png,jpg,jpeg', 'max:3072'],
+            // 'document' => ['image', 'mimes:png,jpg,jpeg', 'max:3072'],
         ];
     }
 }
