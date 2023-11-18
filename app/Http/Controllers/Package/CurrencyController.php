@@ -3,17 +3,23 @@
 namespace App\Http\Controllers\Package;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCurrencyRequest;
 use App\Models\Currency;
+use App\Traits\HttpResponse;
 use Illuminate\Http\Request;
 
 class CurrencyController extends Controller
 {
+    use HttpResponse;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $currencies = Currency::get();
+        return $this->success([
+            'currencies' => $currencies,
+        ]);
     }
 
     /**
@@ -27,9 +33,13 @@ class CurrencyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCurrencyRequest $request)
     {
-        //
+        $request->validated($request->all());
+        $currency = Currency::create(array_merge_recursive($request->only('name', 'code', 'symbol')));
+        return $this->success([
+            'currency' => $currency,
+        ]);
     }
 
     /**
