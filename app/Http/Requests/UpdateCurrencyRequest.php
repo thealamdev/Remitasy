@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreCurrencyRequest extends FormRequest
+class UpdateCurrencyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +23,10 @@ class StoreCurrencyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'unique:currencies'],
-            'code' => ['required'],
+            'name' => ['required', Rule::unique('currencies')->ignore($this->name)],
+            'code' => ['required', Rule::unique('currencies')->ignore($this->code)],
             'symbol' => ['required'],
-            'rate' => ['required','numeric']
+            'rate' => ['required', 'numeric'],
         ];
     }
 }

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Package;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCurrencyRequest;
+use App\Http\Requests\UpdateCurrencyRequest;
 use App\Models\Currency;
 use App\Traits\HttpResponse;
-use Illuminate\Http\Request;
 
 class CurrencyController extends Controller
 {
@@ -23,31 +23,15 @@ class CurrencyController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreCurrencyRequest $request)
     {
         $request->validated($request->all());
-        $currency = Currency::create(array_merge_recursive($request->only('name', 'code', 'symbol')));
+        $currency = Currency::create(array_merge_recursive($request->only('name', 'code', 'symbol', 'rate')));
         return $this->success([
             'currency' => $currency,
-        ]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Currency $currency)
-    {
-        //
+        ], 'Currency added auccessfull');
     }
 
     /**
@@ -55,15 +39,20 @@ class CurrencyController extends Controller
      */
     public function edit(Currency $currency)
     {
-        //
+        return $this->success([
+            'currency' => $currency,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Currency $currency)
+    public function update(UpdateCurrencyRequest $request, Currency $currency)
     {
-        //
+        $currency->update(array_merge_recursive($request->only('name', 'code', 'symbol', 'rate')));
+        return $this->success([
+            'data' => 'updated',
+        ], 'Currency updated successfully');
     }
 
     /**
@@ -71,6 +60,9 @@ class CurrencyController extends Controller
      */
     public function destroy(Currency $currency)
     {
-        //
+        $currency->delete();
+        return $this->success([
+            'data' => 'deleted',
+        ], 'Currency deleted successfull');
     }
 }
