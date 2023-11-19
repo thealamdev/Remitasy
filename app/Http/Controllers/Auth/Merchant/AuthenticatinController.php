@@ -21,9 +21,14 @@ class AuthenticatinController extends Controller
     {
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
-
         $merchant = Merchant::create($data);
-        // $this->upload($request);
+        $image = $request->file('image');
+        $image_name = $image->getClientOriginalName();
+        $mime = $image->getClientOriginalExtension();
+        $size = $image->getSize();
+
+        $image->storeAs('merchant',$image_name,'public');
+
 
         return $this->success([
             'merchant' => $merchant,
