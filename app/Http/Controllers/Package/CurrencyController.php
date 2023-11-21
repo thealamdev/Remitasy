@@ -7,7 +7,6 @@ use App\Http\Handlers\Package\CurrencyHandler;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
 use App\Models\Currency;
-use App\Models\Merchant;
 use App\Traits\HttpResponse;
 
 class CurrencyController extends Controller
@@ -18,7 +17,6 @@ class CurrencyController extends Controller
      */
     public function index()
     {
-        return $merchant = Merchant::with('image')->get();
         $currencies = Currency::get();
         return $this->success([
             'currencies' => $currencies,
@@ -50,7 +48,7 @@ class CurrencyController extends Controller
      */
     public function update(UpdateCurrencyRequest $request, Currency $currency, CurrencyHandler $handler)
     {
-        $isCreate = $handler->update($request,$currency);
+        $isCreate = $handler->update($request, $currency);
         return $isCreate;
     }
 

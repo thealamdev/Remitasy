@@ -34,7 +34,7 @@ class MerchantRegisterRequest extends FormRequest
             'currency_id' => ['required'],
             'document_type' => ['required'],
             'image' => ['image', 'mimes:png,jpg,jpeg', 'max:3072'],
-            // 'document' => ['image', 'mimes:png,jpg,jpeg', 'max:3072'],
+            'document' => ['image', 'mimes:png,jpg,jpeg', 'max:3072'],
         ];
     }
 }

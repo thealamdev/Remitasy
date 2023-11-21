@@ -1,18 +1,25 @@
 <?php
 namespace App\Traits;
 
+use App\Models\Document;
 use App\Models\Image;
 
 trait Uploader
 {
-    public function upload($request, $image_id, $bucket, $type, ?string $access = 'public')
+    public function upload($request, $name, $file_id, $bucket, $relation, ?string $access = 'public')
     {
-        $image = $request->file('image');
-        $mime = $image->getClientOriginalExtension();
-        $image_name = uniqid() . "." . $mime;
-        $url = asset('storage/' . $bucket->toString() . '/' . $image_name);
+        $file = $request->file($name);
+        $mime = $file->getClientOriginalExtension();
+        $file_name = uniqid() . "." . $mime;
+        $url = asset('storage/' . $bucket->toString() . '/' . $file_name);
 
-        $image->storeAs($bucket->toString(), $image_name, $access);
-        Image::create(['image_type' => $type, 'image_id' => $image_id, 'name' => $image_name, 'path' => $bucket->toString(), 'size' => $image->getSize(), 'mime' => $image->getClientMimeType(), 'disk' => 'local', 'url' => $url]);
+        $file->storeAs($bucket->toString(), $file_name, $access);
+        if ($name == 'image') {
+            Image::create(['image_type' => $relation, 'image_id' => $file_id, 'name' => $file_name, 'path' => $bucket->toString(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType(), 'disk' => 'local', 'url' => $url]);
+        }
+        if ($name == 'document') {
+            Document::create(['document_type' => $relation, 'document_id' => $file_id, 'name' => $file_name, 'path' => $bucket->toString(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType(), 'disk' => 'local', 'url' => $url]);
+        }
+
     }
 }

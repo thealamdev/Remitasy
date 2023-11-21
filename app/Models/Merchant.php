@@ -21,6 +21,11 @@ class Merchant extends Model implements Authenticatable
         return $this->MorphOne(Image::class, 'image');
     }
 
+    public function document()
+    {
+        return $this->MorphOne(Document::class, 'document');
+    }
+
     public function getAuthIdentifierName()
     {
         return 'id';

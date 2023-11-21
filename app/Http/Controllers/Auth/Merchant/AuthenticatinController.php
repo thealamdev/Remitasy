@@ -23,7 +23,8 @@ class AuthenticatinController extends Controller
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
         $merchant = Merchant::create($data);
-        $this->upload($request, $merchant->getKey(), Bucket::MERCHANT,Merchant::class);
+        $this->upload($request, 'image', $merchant->getKey(), Bucket::MERCHANT,Merchant::class);
+        $this->upload($request,'document', $merchant->getKey(), Bucket::DOCUMENT,Merchant::class);
 
         return $this->success([
             'merchant' => $merchant,
