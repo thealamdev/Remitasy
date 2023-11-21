@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Auth\Merchant;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\MerchantLoginRequest;
-use App\Http\Requests\MerchantRegisterRequest;
+use App\Enums\Bucket;
 use App\Models\Merchant;
-use App\Traits\HttpResponse;
 use App\Traits\Uploader;
+use App\Traits\HttpResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\MerchantLoginRequest;
+use App\Http\Requests\MerchantRegisterRequest;
 
 class AuthenticatinController extends Controller
 {
@@ -22,13 +23,7 @@ class AuthenticatinController extends Controller
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
         $merchant = Merchant::create($data);
-        $image = $request->file('image');
-        $image_name = $image->getClientOriginalName();
-        $mime = $image->getClientOriginalExtension();
-        $size = $image->getSize();
-
-        $image->storeAs('merchant',$image_name,'public');
-
+        $this->upload($request, $merchant->getKey(), Bucket::MERCHANT,Merchant::class);
 
         return $this->success([
             'merchant' => $merchant,

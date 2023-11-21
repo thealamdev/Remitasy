@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -14,6 +15,11 @@ class Merchant extends Model implements Authenticatable
     protected $guarded = ['id'];
 
     protected $guard = 'merchant';
+
+    public function image()
+    {
+        return $this->MorphOne(Image::class, 'image');
+    }
 
     public function getAuthIdentifierName()
     {
