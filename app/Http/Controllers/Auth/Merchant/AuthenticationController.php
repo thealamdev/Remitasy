@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 
-class AuthenticatinController extends Controller
+class AuthenticationController extends Controller
 {
     use HttpResponse, Uploader;
     /**
@@ -34,7 +34,7 @@ class AuthenticatinController extends Controller
     }
 
     /**
-     * Show the form for login into merchant dashboard.
+     * login into merchant dashboard.
      */
     public function login(MerchantLoginRequest $request)
     {

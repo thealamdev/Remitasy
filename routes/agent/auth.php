@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\Merchant\AuthenticationController;
+use App\Http\Controllers\Auth\Agent\AuthenticationController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthenticationController::class)->group(function () {
