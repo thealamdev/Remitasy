@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Auth\Merchant;
 
 use App\Enums\Bucket;
-use App\Models\Merchant;
-use App\Traits\Uploader;
-use App\Traits\HttpResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\MerchantLoginRequest;
 use App\Http\Requests\MerchantRegisterRequest;
+use App\Models\Merchant;
+use App\Traits\HttpResponse;
+use App\Traits\Uploader;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthenticatinController extends Controller
 {
@@ -23,8 +24,8 @@ class AuthenticatinController extends Controller
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
         $merchant = Merchant::create($data);
-        $this->upload($request, 'image', $merchant->getKey(), Bucket::MERCHANT,Merchant::class);
-        $this->upload($request,'document', $merchant->getKey(), Bucket::DOCUMENT,Merchant::class);
+        $this->upload($request, 'image', $merchant->getKey(), Bucket::MERCHANT, Merchant::class);
+        $this->upload($request, 'document', $merchant->getKey(), Bucket::DOCUMENT, Merchant::class);
 
         return $this->success([
             'merchant' => $merchant,
@@ -47,7 +48,15 @@ class AuthenticatinController extends Controller
             'merchant' => $merchant,
             'token' => $merchant->createToken('API Token of' . $merchant->full_name)->plainTextToken,
         ]);
-
     }
 
+    /**
+     * logout function for merchant.
+     */
+
+    public function logout()
+    {
+        PersonalAccessToken::where('tokenable_id', auth()->user()->id)->delete();
+        return $this->success('', 'You logout successfully');
+    }
 }
